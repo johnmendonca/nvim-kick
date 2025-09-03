@@ -158,21 +158,28 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
--- Detect nginx config files
-vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
-  pattern = { '*/user_conf*/*.conf' },
-  callback = function()
-    vim.bo.filetype = 'nginx'
-  end,
-})
+-- A central place to map file patterns to their desired filetypes.
+-- To add a new rule, you only need to add a new entry to this table.
+local filetype_mappings = {
+  ['*/user_conf*/*.conf'] = 'nginx',
+  ['.env.*'] = 'sh',
+  ['uv.lock'] = 'toml',
+}
 
--- Detect other .env files
-vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
-  pattern = { '.env.*' },
-  callback = function()
-    vim.bo.filetype = 'sh'
-  end,
-})
+-- Create a dedicated augroup to hold our filetype autocommands.
+-- This makes them easy to clear and reload.
+local ft_augroup = vim.api.nvim_create_augroup('CustomFiletypes', { clear = true })
+
+-- Iterate over the mappings table and create an autocommand for each entry.
+for pattern, filetype in pairs(filetype_mappings) do
+  vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
+    group = ft_augroup,
+    pattern = pattern,
+    callback = function()
+      vim.bo.filetype = filetype
+    end,
+  })
+end
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
