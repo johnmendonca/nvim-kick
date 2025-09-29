@@ -1059,26 +1059,32 @@ require('lazy').setup({
 
   {
     'linux-cultist/venv-selector.nvim',
-    event = 'VimEnter',
     dependencies = {
       'neovim/nvim-lspconfig',
       { 'nvim-telescope/telescope.nvim', branch = '0.1.x', dependencies = { 'nvim-lua/plenary.nvim' } },
     },
-    branch = 'regexp', -- This is the regexp branch, use this for the new version
-    config = function()
-      require('venv-selector').setup {}
-    end,
+    ft = 'python',
     keys = {
       { ',v', '<cmd>VenvSelect<cr>' },
     },
+    opts = {},
   },
 
   {
     'windwp/nvim-autopairs',
     event = 'InsertEnter',
-    opts = {},
+    opts = {
+      -- To allow adding quote pairs in the middle of existing lines
+      -- Default behavior would "move right" on pre-existing quotes
+      ignored_next_char = [=[[%w%%%[%.%`%$]]=],
+    },
+    -- If needed, uncomment to disable quote pairs entirely
+    -- config = function()
+    --   local npairs = require 'nvim-autopairs'
+    --   npairs.remove_rule '"'
+    --   npairs.remove_rule "'"
+    -- end,
   },
-
   {
     'urbit/hoon.vim',
     event = 'VimEnter',
