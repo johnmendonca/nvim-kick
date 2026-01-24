@@ -673,6 +673,7 @@ require('lazy').setup({
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         ts_ls = {},
+        eslint = {},
         pyright = {},
         rust_analyzer = {},
         html = { filetypes = { 'html', 'twig', 'hbs' } },
@@ -1027,6 +1028,7 @@ require('lazy').setup({
         --  If you are experiencing weird indenting issues, add the language to
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
         additional_vim_regex_highlighting = { 'ruby' },
+        disable = { 'dockerfile' },
       },
       indent = { enable = true, disable = { 'ruby' } },
     },
