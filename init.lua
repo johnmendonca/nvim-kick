@@ -350,14 +350,6 @@ require('lazy').setup({
     end,
   },
 
-  {
-    'ctrlpvim/ctrlp.vim',
-    event = 'VimEnter',
-    init = function()
-      vim.g.ctrlp_user_command = { '.git', 'cd %s && git ls-files -co --exclude-standard' }
-    end,
-  },
-
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
