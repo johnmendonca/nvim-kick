@@ -75,6 +75,9 @@ vim.o.completeopt = 'menu,menuone,noselect'
 -- Set maximum popup menu height
 vim.o.pumheight = 10
 
+-- Temp fix for blink.cmp floating window statuslines
+vim.o.laststatus = 3
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
