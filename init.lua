@@ -75,8 +75,8 @@ vim.o.completeopt = 'menu,menuone,noselect'
 -- Set maximum popup menu height
 vim.o.pumheight = 10
 
--- Temp fix for blink.cmp floating window statuslines
-vim.o.laststatus = 3
+-- Remove line reserved for commands
+vim.o.cmdheight = 0
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -239,7 +239,6 @@ require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'christoomey/vim-tmux-navigator',
   'sheerun/vim-polyglot',
-  'vim-airline/vim-airline',
   'tpope/vim-fugitive',
   -- NOTE: Plugins can be added via a link or github org/name. To run setup automatically, use `opts = {}`
   { 'NMAC427/guess-indent.nvim', opts = {} },
@@ -949,17 +948,63 @@ require('lazy').setup({
       -- -- Simple and easy statusline.
       -- --  You could remove this setup call if you don't like it,
       -- --  and try some other statusline plugin
-      -- local statusline = require 'mini.statusline'
-      -- -- set use_icons to true if you have a Nerd Font
-      -- statusline.setup { use_icons = vim.g.have_nerd_font }
+      local statusline = require 'mini.statusline'
+
+      -- Check for lines with trailing whitespace
+      local cached_whitespace = ''
+      local function update_whitespace_cache()
+        local space = vim.fn.search([[\s$]], 'nwc')
+        cached_whitespace = (space ~= 0) and (' trailing ㏑' .. space .. ' ') or ''
+      end
+      vim.api.nvim_create_autocmd({ 'BufWritePost', 'InsertLeave', 'BufEnter', 'TextChanged' }, {
+        callback = update_whitespace_cache,
+      })
+
+      statusline.setup {
+        use_icons = vim.g.have_nerd_font,
+        content = {
+          active = function()
+            local mode, mode_hl = statusline.section_mode { trunc_width = 120 }
+            local git = statusline.section_git { trunc_width = 75 }
+            local diff = statusline.section_diff { trunc_width = 75 }
+            local diagnostics = statusline.section_diagnostics {
+              trunc_width = 75,
+              icon = '',
+              signs = {
+                ERROR = '%#DiagnosticError# ',
+                WARN = '%#DiagnosticWarn# ',
+                INFO = '%#DiagnosticInfo# ',
+                HINT = '%#DiagnosticHint# ',
+              },
+            }
+            local filename = statusline.section_filename { trunc_width = 140 }
+            local fileinfo = statusline.section_fileinfo { trunc_width = 120 }
+            local search = statusline.section_searchcount { trunc_width = 75 }
+            local location = statusline.section_location { trunc_width = 75 }
+            local whitespace = cached_whitespace
+
+            return statusline.combine_groups {
+              { hl = mode_hl, strings = { mode } },
+              { hl = 'MiniStatuslineDevinfo', strings = { git, diff } },
+              '%<', -- Truncate point
+              { hl = 'MiniStatuslineFilename', strings = { filename } },
+              '%=', -- Right align
+              { strings = { diagnostics } },
+              { hl = 'MiniStatuslineFileinfo', strings = { fileinfo } },
+              { hl = 'CurSearch', strings = { whitespace } },
+              { hl = mode_hl, strings = { search, location } },
+            }
+          end,
+        },
+      }
       --
       -- -- You can configure sections in the statusline by overriding their
       -- -- default behavior. For example, here we set the section for
       -- -- cursor location to LINE:COLUMN
-      -- ---@diagnostic disable-next-line: duplicate-set-field
-      -- statusline.section_location = function()
-      --   return '%2l:%-2v'
-      -- end
+      ---@diagnostic disable-next-line: duplicate-set-field
+      statusline.section_location = function()
+        return '%p%% %2l:%-2v'
+      end
 
       -- ... and there is more!
       --  Check out: https://github.com/nvim-mini/mini.nvim
