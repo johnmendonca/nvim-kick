@@ -954,7 +954,7 @@ require('lazy').setup({
       local cached_whitespace = ''
       local function update_whitespace_cache()
         local space = vim.fn.search([[\s$]], 'nwc')
-        cached_whitespace = (space ~= 0) and (' trailing ㏑' .. space .. ' ') or ''
+        cached_whitespace = (space ~= 0) and (' ㏑' .. space) or ''
       end
       vim.api.nvim_create_autocmd({ 'BufWritePost', 'InsertLeave', 'BufEnter', 'TextChanged' }, {
         callback = update_whitespace_cache,
