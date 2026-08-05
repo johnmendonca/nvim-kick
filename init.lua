@@ -333,23 +333,6 @@ require('lazy').setup({
     },
   },
 
-  {
-    'preservim/nerdtree',
-    event = 'VimEnter',
-    keys = {
-      { '<C-n>', '<cmd>NERDTreeToggle<CR>', mode = 'n', desc = 'Toggle [N]ERDTree' },
-    },
-    init = function()
-      -- Display settings
-      vim.g.NERDTreeShowHidden = true
-      vim.g.NERDTreeIgnore = { '\\.pyc$', '^__pycache__$' }
-    end,
-    config = function()
-      -- Open tree and move to next window right
-      vim.cmd ':NERDTree | wincmd p'
-    end,
-  },
-
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     -- By default, Telescope is included and acts as your picker for everything.
@@ -1162,7 +1145,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.neo-tree',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommended keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
