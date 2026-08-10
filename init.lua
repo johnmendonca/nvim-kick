@@ -75,9 +75,6 @@ vim.o.completeopt = 'menu,menuone,noselect'
 -- Set maximum popup menu height
 vim.o.pumheight = 10
 
--- Remove line reserved for commands
-vim.o.cmdheight = 0
-
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -185,14 +182,6 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
--- vim-polyglot does not set this
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = 'sh',
-  callback = function()
-    vim.bo.tabstop = 4
-  end,
-})
-
 -- A central place to map file patterns to their desired filetypes.
 -- To add a new rule, you only need to add a new entry to this table.
 local filetype_mappings = {
@@ -246,8 +235,6 @@ require('lazy').setup({
 
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'christoomey/vim-tmux-navigator',
-  'sheerun/vim-polyglot',
-  'tpope/vim-fugitive',
   -- NOTE: Plugins can be added via a link or github org/name. To run setup automatically, use `opts = {}`
   { 'NMAC427/guess-indent.nvim', opts = {} },
 
@@ -1015,7 +1002,7 @@ require('lazy').setup({
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter-intro`
     config = function()
       -- ensure basic parser are installed
-      local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+      local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'prisma' }
       require('nvim-treesitter').install(parsers)
 
       ---@param buf integer
