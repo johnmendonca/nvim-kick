@@ -188,6 +188,7 @@ local filetype_mappings = {
   ['*/user_conf*/*.conf'] = 'nginx',
   ['.env.*'] = 'sh',
   ['uv.lock'] = 'toml',
+  ['Caddyfile'] = 'caddy',
 }
 
 -- Create a dedicated augroup to hold our filetype autocommands.
@@ -1002,7 +1003,7 @@ require('lazy').setup({
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter-intro`
     config = function()
       -- ensure basic parser are installed
-      local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'prisma' }
+      local parsers = { 'bash', 'c', 'caddy', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'prisma' }
       require('nvim-treesitter').install(parsers)
 
       ---@param buf integer
